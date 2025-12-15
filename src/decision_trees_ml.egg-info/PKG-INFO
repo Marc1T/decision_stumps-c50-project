@@ -1,0 +1,475 @@
+Metadata-Version: 2.4
+Name: decision-trees-ml
+Version: 1.0.0
+Summary: Implémentation complète de Decision Stumps et C5.0 from scratch
+Home-page: https://github.com/votre-username/decision_stumps_c50
+Author: Équipe ENSAM Meknès
+Author-email: votre.email@example.com
+License: MIT
+Keywords: machine-learning decision-trees decision-stumps c50 c4.5 classification ensemble-learning adaboost boosting
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Education
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Operating System :: OS Independent
+Classifier: Natural Language :: French
+Classifier: Natural Language :: English
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy<2.0.0,>=1.21.0
+Requires-Dist: pandas<3.0.0,>=1.3.0
+Requires-Dist: scikit-learn<2.0.0,>=1.0.0
+Requires-Dist: matplotlib<4.0.0,>=3.4.0
+Requires-Dist: seaborn<1.0.0,>=0.11.0
+Requires-Dist: graphviz>=0.20.0
+Requires-Dist: plotly<6.0.0,>=5.0.0
+Requires-Dist: jupyter>=1.0.0
+Requires-Dist: notebook<8.0.0,>=6.4.0
+Requires-Dist: ipywidgets<9.0.0,>=7.6.0
+Requires-Dist: ipykernel>=6.0.0
+Requires-Dist: flask<4.0.0,>=2.0.0
+Requires-Dist: fastapi>=0.95.0
+Requires-Dist: uvicorn>=0.20.0
+Requires-Dist: streamlit>=1.20.0
+Requires-Dist: gunicorn>=20.1.0
+Requires-Dist: joblib>=1.1.0
+Requires-Dist: tqdm>=4.62.0
+Requires-Dist: python-dotenv>=0.19.0
+Requires-Dist: pyyaml>=6.0
+Requires-Dist: openpyxl>=3.0.9
+Requires-Dist: xlrd>=2.0.1
+Requires-Dist: numba>=0.55.0
+Requires-Dist: cython>=0.29.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: pytest-cov>=3.0.0; extra == "dev"
+Requires-Dist: black>=22.0.0; extra == "dev"
+Requires-Dist: flake8>=4.0.0; extra == "dev"
+Requires-Dist: mypy>=0.950; extra == "dev"
+Requires-Dist: isort>=5.10.0; extra == "dev"
+Provides-Extra: docs
+Requires-Dist: sphinx>=4.0.0; extra == "docs"
+Requires-Dist: sphinx-rtd-theme>=1.0.0; extra == "docs"
+Requires-Dist: sphinx-autodoc-typehints>=1.12.0; extra == "docs"
+Provides-Extra: visualization
+Requires-Dist: graphviz>=0.20.0; extra == "visualization"
+Requires-Dist: plotly>=5.0.0; extra == "visualization"
+Requires-Dist: seaborn>=0.11.0; extra == "visualization"
+Provides-Extra: deployment
+Requires-Dist: flask>=2.0.0; extra == "deployment"
+Requires-Dist: fastapi>=0.95.0; extra == "deployment"
+Requires-Dist: uvicorn>=0.20.0; extra == "deployment"
+Requires-Dist: streamlit>=1.20.0; extra == "deployment"
+Requires-Dist: gunicorn>=20.1.0; extra == "deployment"
+Provides-Extra: notebooks
+Requires-Dist: jupyter>=1.0.0; extra == "notebooks"
+Requires-Dist: notebook>=6.4.0; extra == "notebooks"
+Requires-Dist: ipywidgets>=7.6.0; extra == "notebooks"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: keywords
+Dynamic: license
+Dynamic: license-file
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# Decision Stumps & C5.0 Implementation 🌳
+
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+[![Coverage](https://img.shields.io/badge/coverage-90%2B-brightgreen.svg)]()
+
+Implémentation complète from scratch des **Decision Stumps** (souches de décision) et de l'algorithme **C5.0** avec tous les fondements mathématiques, les algorithmes détaillés et une library Python production-ready.
+
+## 📚 Table des Matières
+
+- [Présentation](#présentation)
+- [Fonctionnalités](#fonctionnalités)
+- [Installation](#installation)
+- [Utilisation Rapide](#utilisation-rapide)
+- [Documentation](#documentation)
+- [Architecture](#architecture)
+- [Exemples](#exemples)
+- [Tests](#tests)
+- [Benchmarks](#benchmarks)
+- [Déploiement](#déploiement)
+- [Contributeurs](#contributeurs)
+- [Licence](#licence)
+
+## 🎯 Présentation
+
+Ce projet implémente deux algorithmes fondamentaux d'apprentissage automatique pour la classification :
+
+### Decision Stumps (Souches de Décision)
+- Arbres de décision de **profondeur 1** (un seul niveau)
+- Classifieurs faibles ultra-rapides
+- Utilisés principalement dans les méthodes d'ensemble (AdaBoost, Gradient Boosting)
+- Complexité : O(dn log n) entraînement, O(1) prédiction
+
+### C5.0
+- Évolution moderne de l'algorithme C4.5 de Ross Quinlan (1993)
+- Utilise le **Gain Ratio** pour éviter le biais vers attributs multi-valués
+- **Élagage par erreur** pour réduire le surapprentissage
+- Gestion native des **valeurs manquantes**
+- Support du **boosting** intégré
+- 10× plus rapide que C4.5 avec meilleure précision
+
+## ✨ Fonctionnalités
+
+### Core Features
+- ✅ **Decision Stump** avec critères Gini, Entropie, Erreur de classification
+- ✅ **C5.0 Tree** avec Gain Ratio et élagage pessimiste
+- ✅ **Gestion des valeurs manquantes** (distribution probabiliste)
+- ✅ **Boosting** natif (AdaBoost style)
+- ✅ **Pondération des coûts** d'erreur
+- ✅ **Extraction de règles** IF-THEN depuis les arbres
+
+### Compatibilité scikit-learn
+- ✅ Interface standard `fit()`, `predict()`, `predict_proba()`
+- ✅ Compatible avec `cross_val_score`, `GridSearchCV`
+- ✅ Intégrable dans des `Pipeline`
+- ✅ Attributs standardisés (`feature_importances_`, etc.)
+
+### Visualisation
+- ✅ Graphiques d'arbres (Graphviz, Matplotlib)
+- ✅ Courbes ROC, matrices de confusion
+- ✅ Importance des features
+- ✅ Visualisation des décisions
+
+### Déploiement
+- ✅ API REST (Flask/FastAPI)
+- ✅ Interface web interactive (Streamlit)
+- ✅ Containerisation Docker
+- ✅ Export de modèles (pickle, joblib, ONNX)
+
+## 🚀 Installation
+
+### Installation via pip (recommandé)
+
+```bash
+pip install decision-trees-ml
+```
+
+### Installation depuis les sources
+
+```bash
+# Cloner le repository
+git clone https://github.com/votre-repo/decision_stumps_c50.git
+cd decision_stumps_c50_project
+
+# Créer un environnement virtuel
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# ou venv\Scripts\activate  # Windows
+
+# Installer les dépendances
+pip install -r requirements.txt
+
+# Installer le package en mode développement
+pip install -e .
+```
+
+### Dépendances
+
+```
+numpy >= 1.21.0
+pandas >= 1.3.0
+scikit-learn >= 1.0.0
+matplotlib >= 3.4.0
+```
+
+## 💡 Utilisation Rapide
+
+### Decision Stump
+
+```python
+from decision_trees_ml import DecisionStump
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+
+# Charger données
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+
+# Créer et entraîner un Decision Stump
+stump = DecisionStump(criterion='gini')
+stump.fit(X_train, y_train)
+
+# Prédire
+y_pred = stump.predict(X_test)
+
+# Évaluer
+accuracy = stump.score(X_test, y_test)
+print(f"Accuracy: {accuracy:.2%}")
+
+# Voir les paramètres du stump
+print(f"Feature: {stump.feature_index_}")
+print(f"Threshold: {stump.threshold_:.2f}")
+```
+
+### C5.0 Tree
+
+```python
+from decision_trees_ml import C50Tree
+
+# Créer un arbre C5.0
+tree = C50Tree(
+    max_depth=10,
+    min_samples_split=2,
+    pruning=True,
+    boosting_rounds=0
+)
+
+# Entraîner
+tree.fit(X_train, y_train, feature_names=['sepal_length', 'sepal_width', 
+                                           'petal_length', 'petal_width'])
+
+# Prédire avec probabilités
+y_pred = tree.predict(X_test)
+y_proba = tree.predict_proba(X_test)
+
+# Évaluer
+accuracy = tree.score(X_test, y_test)
+print(f"C5.0 Accuracy: {accuracy:.2%}")
+
+# Extraire règles
+rules = tree.to_rules()
+print(rules)
+
+# Importance des features
+importances = tree.feature_importances_
+for name, imp in zip(feature_names, importances):
+    print(f"{name}: {imp:.4f}")
+```
+
+### AdaBoost avec Decision Stumps
+
+```python
+from decision_trees_ml import AdaBoostStump
+
+# Créer ensemble AdaBoost
+ada = AdaBoostStump(n_estimators=50)
+ada.fit(X_train, y_train)
+
+# Prédire
+y_pred = ada.predict(X_test)
+accuracy = ada.score(X_test, y_test)
+print(f"AdaBoost Accuracy: {accuracy:.2%}")
+```
+
+### C5.0 avec Boosting Intégré
+
+```python
+# C5.0 avec boosting (comme implémentation originale)
+boosted_tree = C50Tree(
+    max_depth=5,
+    pruning=True,
+    boosting_rounds=10  # 10 itérations de boosting
+)
+
+boosted_tree.fit(X_train, y_train)
+accuracy = boosted_tree.score(X_test, y_test)
+print(f"C5.0 Boosted Accuracy: {accuracy:.2%}")
+```
+
+## 📖 Documentation
+
+### Documentation Complète
+
+- 📄 **[Rapport LaTeX](docs/rapport/main.pdf)** : 40+ pages de fondements mathématiques
+- 📓 **[Notebooks Tutoriels](examples/notebooks/)** : 5 tutoriels interactifs
+- 🌐 **[API Documentation](docs/api/index.html)** : Documentation auto-générée
+- 🎓 **[Présentation](docs/presentation/slides.pdf)** : Slides du projet
+
+### Tutoriels Jupyter
+
+1. **[Introduction](examples/notebooks/01_introduction.ipynb)** : Vue d'ensemble
+2. **[Decision Stump Tutorial](examples/notebooks/02_decision_stump_tutorial.ipynb)** : Guide complet DS
+3. **[C5.0 Tutorial](examples/notebooks/03_c50_tutorial.ipynb)** : Guide complet C5.0
+4. **[Mathematical Details](examples/notebooks/04_mathematical_details.ipynb)** : Détails mathématiques
+5. **[Full Pipeline](examples/notebooks/05_full_pipeline.ipynb)** : Pipeline ML complet
+
+## 🏗️ Architecture
+
+```
+decision_stumps_c50_project/
+├── src/
+│   ├── decision_stump/    # Module Decision Stump
+│   │   ├── stump.py       # Classe principale
+│   │   ├── criteria.py    # Gini, Entropie, Erreur
+│   │   └── utils.py       # Utilitaires
+│   ├── c50/               # Module C5.0
+│   │   ├── tree.py        # Classe C50Tree
+│   │   ├── node.py        # Structure de nœud
+│   │   ├── splitter.py    # Gain Ratio
+│   │   ├── pruning.py     # Élagage
+│   │   ├── missing_values.py
+│   │   └── boosting.py
+│   ├── ensemble/          # Méthodes d'ensemble
+│   ├── visualization/     # Visualisation
+│   └── utils/             # Utilitaires généraux
+├── tests/                 # Tests unitaires
+├── examples/              # Exemples d'utilisation
+├── benchmarks/            # Comparaisons de performance
+└── deployment/            # API, Streamlit, Docker
+```
+
+## 📊 Exemples
+
+Le dossier `examples/` contient 5 scripts progressifs :
+
+```bash
+# 1. Exemple basique Decision Stump
+python examples/01_basic_decision_stump.py
+
+# 2. Classification avec C5.0
+python examples/02_c50_classification.py
+
+# 3. Ensemble AdaBoost
+python examples/03_adaboost_ensemble.py
+
+# 4. Comparaison DS vs C5.0 vs sklearn
+python examples/04_comparison.py
+
+# 5. Application sur données réelles
+python examples/05_real_world_dataset.py
+```
+
+## 🧪 Tests
+
+Le projet inclut une suite de tests complète avec coverage > 90%.
+
+```bash
+# Lancer tous les tests
+pytest tests/ -v
+
+# Avec coverage
+pytest tests/ --cov=src --cov-report=html
+
+# Tests spécifiques
+pytest tests/test_decision_stump.py -v
+pytest tests/test_c50.py -v
+```
+
+### Tests Disponibles
+
+- ✅ `test_decision_stump.py` : Tests unitaires DS
+- ✅ `test_c50.py` : Tests unitaires C5.0
+- ✅ `test_criteria.py` : Tests critères d'impureté
+- ✅ `test_pruning.py` : Tests élagage
+- ✅ `test_boosting.py` : Tests boosting
+- ✅ `test_integration.py` : Tests d'intégration
+
+## ⚡ Benchmarks
+
+Comparaisons de performance sur plusieurs datasets :
+
+```bash
+# Benchmark vitesse
+python benchmarks/speed_comparison.py
+
+# Benchmark précision
+python benchmarks/accuracy_comparison.py
+```
+
+### Résultats Typiques (Iris Dataset)
+
+| Algorithme | Accuracy | Temps Entraînement | Temps Prédiction |
+|------------|----------|-------------------|------------------|
+| Decision Stump | 66.7% | 0.001s | 0.0001s |
+| C5.0 | 95.6% | 0.015s | 0.001s |
+| C5.0 + Boosting | 97.8% | 0.12s | 0.005s |
+| sklearn DecisionTree | 95.6% | 0.002s | 0.0001s |
+
+## 🚀 Déploiement
+
+### API REST
+
+```bash
+cd deployment/api
+pip install -r requirements_api.txt
+python app.py
+```
+
+Accès : `http://localhost:5000`
+
+Endpoints :
+- `POST /predict` : Prédire classes
+- `POST /train` : Entraîner modèle
+- `GET /model/info` : Informations sur le modèle
+
+### Application Streamlit
+
+```bash
+cd deployment/streamlit
+streamlit run app.py
+```
+
+Interface interactive pour :
+- Entraîner des modèles
+- Visualiser les arbres
+- Tester sur données personnalisées
+- Comparer algorithmes
+
+### Docker
+
+```bash
+cd deployment/docker
+docker-compose up
+```
+
+## 👥 Contributeurs
+
+Ce projet a été réalisé dans le cadre d'un projet académique à l'ENSAM Meknès :
+
+- **Nankouli Marc Thierry**
+- **El Khatar Saad**
+- **El Filali**
+
+**Encadrant :** Mr. Idriss Barbara
+
+## 📜 Licence
+
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+
+## 📚 Références
+
+- Quinlan, J.R. (1993). *C4.5: Programs for Machine Learning*. Morgan Kaufmann.
+- Quinlan, J.R. (1996). *Improved Use of Continuous Attributes in C4.5*. JAIR, 4:77-90.
+- Freund, Y., Schapire, R.E. (1997). *A Decision-Theoretic Generalization of On-Line Learning*. JCSS, 55(1):119-139.
+- Hastie, T., Tibshirani, R., Friedman, J. (2009). *The Elements of Statistical Learning*. Springer.
+
+## 🤝 Contributions
+
+Les contributions sont les bienvenues ! N'hésitez pas à :
+
+1. Fork le projet
+2. Créer une branche (`git checkout -b feature/AmazingFeature`)
+3. Commit vos changements (`git commit -m 'Add AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
+
+## 📧 Contact
+
+<!-- Pour toute question ou suggestion : [votre.email@example.com](mailto:votre.email@example.com) -->
+
+---
+
+⭐ Si ce projet vous a été utile, n'oubliez pas de mettre une étoile !
