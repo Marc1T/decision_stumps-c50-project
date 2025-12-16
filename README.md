@@ -1,384 +1,370 @@
-# Decision Stumps & C5.0 Implementation 🌳
+# Decision Stump & C5.0 Stump - Implementation from Scratch 🌳
 
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
-[![Coverage](https://img.shields.io/badge/coverage-90%2B-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-58%20passed-brightgreen.svg)]()
+[![Code Quality](https://img.shields.io/badge/code%20quality-A-brightgreen.svg)]()
 
-Implémentation complète from scratch des **Decision Stumps** (souches de décision) et de l'algorithme **C5.0** avec tous les fondements mathématiques, les algorithmes détaillés et une library Python production-ready.
+> **Implémentation complète from scratch de Decision Stumps et C5.0 Stumps**  
+> Projet académique - ENSAM Meknès 2024-2025
 
-## 📚 Table des Matières
+---
 
-- [Présentation](#présentation)
-- [Fonctionnalités](#fonctionnalités)
-- [Installation](#installation)
-- [Utilisation Rapide](#utilisation-rapide)
-- [Documentation](#documentation)
-- [Architecture](#architecture)
-- [Exemples](#exemples)
-- [Tests](#tests)
-- [Benchmarks](#benchmarks)
-- [Déploiement](#déploiement)
-- [Contributeurs](#contributeurs)
-- [Licence](#licence)
+## 📖 Présentation
 
-## 🎯 Présentation
+Ce projet implémente deux algorithmes fondamentaux d'apprentissage automatique :
 
-Ce projet implémente deux algorithmes fondamentaux d'apprentissage automatique pour la classification :
+### 🔵 Decision Stump (Souche de Décision)
+- Arbre de décision de **profondeur 1** (classifieur le plus simple)
+- 3 critères d'impureté : **Gini**, **Entropie**, **Erreur de classification**
+- Utilisé comme classifieur faible dans **AdaBoost** et **Gradient Boosting**
+- Complexité : **O(dn log n)** entraînement, **O(1)** prédiction
 
-### Decision Stumps (Souches de Décision)
-- Arbres de décision de **profondeur 1** (un seul niveau)
-- Classifieurs faibles ultra-rapides
-- Utilisés principalement dans les méthodes d'ensemble (AdaBoost, Gradient Boosting)
-- Complexité : O(dn log n) entraînement, O(1) prédiction
+### 🟢 C5.0 Stump (Version Optimisée)
+- Version avancée avec optimisations de **C5.0** (successeur de C4.5)
+- **Gain Ratio** (correction du biais du Gain d'Information)
+- Gestion native des **valeurs manquantes** (distribution probabiliste)
+- **Élagage pessimiste** pour meilleure généralisation
+- Support de **matrices de coûts** asymétriques
+- Statistiques détaillées pour analyse
 
-### C5.0
-- Évolution moderne de l'algorithme C4.5 de Ross Quinlan (1993)
-- Utilise le **Gain Ratio** pour éviter le biais vers attributs multi-valués
-- **Élagage par erreur** pour réduire le surapprentissage
-- Gestion native des **valeurs manquantes**
-- Support du **boosting** intégré
-- 10× plus rapide que C4.5 avec meilleure précision
+---
 
-## ✨ Fonctionnalités
+## ✨ Fonctionnalités Principales
 
-### Core Features
-- ✅ **Decision Stump** avec critères Gini, Entropie, Erreur de classification
-- ✅ **C5.0 Tree** avec Gain Ratio et élagage pessimiste
-- ✅ **Gestion des valeurs manquantes** (distribution probabiliste)
-- ✅ **Boosting** natif (AdaBoost style)
-- ✅ **Pondération des coûts** d'erreur
-- ✅ **Extraction de règles** IF-THEN depuis les arbres
+### Decision Stump
+✅ 3 critères d'impureté (Gini, Entropie, Erreur)  
+✅ Support des poids d'échantillons  
+✅ Compatible scikit-learn  
+✅ Ultra-rapide (< 1ms sur 1000 exemples)  
+✅ Parfait pour ensembles (AdaBoost)  
 
-### Compatibilité scikit-learn
-- ✅ Interface standard `fit()`, `predict()`, `predict_proba()`
-- ✅ Compatible avec `cross_val_score`, `GridSearchCV`
-- ✅ Intégrable dans des `Pipeline`
-- ✅ Attributs standardisés (`feature_importances_`, etc.)
+### C5.0 Stump
+✅ **Gain Ratio** (évite biais attributs multi-valués)  
+✅ **Valeurs manquantes** (gestion probabiliste native)  
+✅ **Élagage** (pessimistic error-based pruning)  
+✅ **Coûts asymétriques** (matrice de coûts personnalisée)  
+✅ **Statistiques** (entropie, gain, erreur, etc.)  
+✅ Documentation détaillée  
 
-### Visualisation
-- ✅ Graphiques d'arbres (Graphviz, Matplotlib)
-- ✅ Courbes ROC, matrices de confusion
-- ✅ Importance des features
-- ✅ Visualisation des décisions
-
-### Déploiement
-- ✅ API REST (Flask/FastAPI)
-- ✅ Interface web interactive (Streamlit)
-- ✅ Containerisation Docker
-- ✅ Export de modèles (pickle, joblib, ONNX)
+---
 
 ## 🚀 Installation
 
-### Installation via pip (recommandé)
+### Prérequis
+- Python 3.8+
+- pip
+
+### Installation en mode développement
 
 ```bash
-pip install decision-trees-ml
-```
-
-### Installation depuis les sources
-
-```bash
-# Cloner le repository
-git clone https://github.com/votre-repo/decision_stumps_c50.git
+# Cloner le projet
 cd decision_stumps_c50_project
 
-# Créer un environnement virtuel
+# Créer environnement virtuel
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
 # ou venv\Scripts\activate  # Windows
 
-# Installer les dépendances
+# Installer dépendances
 pip install -r requirements.txt
 
-# Installer le package en mode développement
-pip install -e .
+# Installer en mode dev
+python install_dev.py
 ```
 
-### Dépendances
+### Vérification
 
+```bash
+# Test rapide
+python quick_test_c50.py
+
+# Tests unitaires
+pytest tests/ -v
+
+# Exemples
+python examples/01_basic_decision_stump.py
+python examples/02_c50_stump_comparison.py
 ```
-numpy >= 1.21.0
-pandas >= 1.3.0
-scikit-learn >= 1.0.0
-matplotlib >= 3.4.0
-```
+
+---
 
 ## 💡 Utilisation Rapide
 
 ### Decision Stump
 
 ```python
-from decision_trees_ml import DecisionStump
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
+from decision_stump import DecisionStump
+import numpy as np
 
-# Charger données
-X, y = load_iris(return_X_y=True)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+# Données
+X = np.array([[1], [2], [3], [4], [5], [6]])
+y = np.array([0, 0, 0, 1, 1, 1])
 
-# Créer et entraîner un Decision Stump
+# Créer et entraîner
 stump = DecisionStump(criterion='gini')
-stump.fit(X_train, y_train)
+stump.fit(X, y)
 
 # Prédire
-y_pred = stump.predict(X_test)
+y_pred = stump.predict(X)
+print(f"Accuracy: {stump.score(X, y):.2%}")
 
-# Évaluer
-accuracy = stump.score(X_test, y_test)
-print(f"Accuracy: {accuracy:.2%}")
-
-# Voir les paramètres du stump
-print(f"Feature: {stump.feature_index_}")
-print(f"Threshold: {stump.threshold_:.2f}")
+# Afficher
+print(stump)
+# Decision Stump:
+#   IF feature[0] <= 3.5000:
+#     PREDICT class 0
+#   ELSE:
+#     PREDICT class 1
+#   Gain: 0.5000
 ```
 
-### C5.0 Tree
+### C5.0 Stump
 
 ```python
-from decision_trees_ml import C50Tree
+from c50 import C50Stump
+import numpy as np
 
-# Créer un arbre C5.0
-tree = C50Tree(
-    max_depth=10,
-    min_samples_split=2,
-    pruning=True,
-    boosting_rounds=0
+# Données avec valeurs manquantes
+X = np.array([[1.0], [2.0], [np.nan], [4.0], [5.0], [6.0]])
+y = np.array([0, 0, 0, 1, 1, 1])
+
+# Créer avec gestion NaN et élagage
+stump = C50Stump(
+    handle_missing=True,
+    use_pruning=True,
+    confidence_level=0.25
 )
 
 # Entraîner
-tree.fit(X_train, y_train, feature_names=['sepal_length', 'sepal_width', 
-                                           'petal_length', 'petal_width'])
+stump.fit(X, y)
 
-# Prédire avec probabilités
-y_pred = tree.predict(X_test)
-y_proba = tree.predict_proba(X_test)
+# Prédire (gère automatiquement les NaN)
+y_pred = stump.predict(X)
 
-# Évaluer
-accuracy = tree.score(X_test, y_test)
-print(f"C5.0 Accuracy: {accuracy:.2%}")
-
-# Extraire règles
-rules = tree.to_rules()
-print(rules)
-
-# Importance des features
-importances = tree.feature_importances_
-for name, imp in zip(feature_names, importances):
-    print(f"{name}: {imp:.4f}")
+# Statistiques
+print(stump.stats_)
+# {'n_samples': 6, 'n_features': 1, 'n_classes': 2,
+#  'initial_entropy': 1.0, 'final_gain_ratio': 0.918,
+#  'error_rate': 0.0, 'is_pruned': False}
 ```
 
-### AdaBoost avec Decision Stumps
+### Comparaison sur Dataset Réel
 
 ```python
-from decision_trees_ml import AdaBoostStump
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from decision_stump import DecisionStump
+from c50 import C50Stump
 
-# Créer ensemble AdaBoost
-ada = AdaBoostStump(n_estimators=50)
-ada.fit(X_train, y_train)
+# Charger Iris
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 
-# Prédire
-y_pred = ada.predict(X_test)
-accuracy = ada.score(X_test, y_test)
-print(f"AdaBoost Accuracy: {accuracy:.2%}")
+# Decision Stump classique
+ds = DecisionStump(criterion='entropy')
+ds.fit(X_train, y_train)
+print(f"Decision Stump: {ds.score(X_test, y_test):.2%}")
+
+# C5.0 Stump
+c50 = C50Stump(handle_missing=True, use_pruning=True)
+c50.fit(X_train, y_train)
+print(f"C5.0 Stump: {c50.score(X_test, y_test):.2%}")
+print(f"Gain Ratio: {c50.gain_ratio_:.4f}")
 ```
 
-### C5.0 avec Boosting Intégré
+---
 
-```python
-# C5.0 avec boosting (comme implémentation originale)
-boosted_tree = C50Tree(
-    max_depth=5,
-    pruning=True,
-    boosting_rounds=10  # 10 itérations de boosting
-)
+## 📊 Comparaison des Algorithmes
 
-boosted_tree.fit(X_train, y_train)
-accuracy = boosted_tree.score(X_test, y_test)
-print(f"C5.0 Boosted Accuracy: {accuracy:.2%}")
-```
+| Caractéristique | Decision Stump | C5.0 Stump |
+|-----------------|----------------|------------|
+| **Critère** | Gini/Entropie | Gain Ratio |
+| **Valeurs manquantes** | ❌ | ✅ Probabiliste |
+| **Élagage** | ❌ | ✅ Pessimiste |
+| **Coûts asymétriques** | ❌ | ✅ Matrice |
+| **Vitesse** | 🟢 Ultra-rapide | 🟡 Rapide |
+| **Accuracy** | 🟡 Bonne | 🟢 Meilleure |
+| **Généralisation** | 🟡 Acceptable | 🟢 Excellente |
 
-## 📖 Documentation
-
-### Documentation Complète
-
-- 📄 **[Rapport LaTeX](docs/rapport/main.pdf)** : 40+ pages de fondements mathématiques
-- 📓 **[Notebooks Tutoriels](examples/notebooks/)** : 5 tutoriels interactifs
-- 🌐 **[API Documentation](docs/api/index.html)** : Documentation auto-générée
-- 🎓 **[Présentation](docs/presentation/slides.pdf)** : Slides du projet
-
-### Tutoriels Jupyter
-
-1. **[Introduction](examples/notebooks/01_introduction.ipynb)** : Vue d'ensemble
-2. **[Decision Stump Tutorial](examples/notebooks/02_decision_stump_tutorial.ipynb)** : Guide complet DS
-3. **[C5.0 Tutorial](examples/notebooks/03_c50_tutorial.ipynb)** : Guide complet C5.0
-4. **[Mathematical Details](examples/notebooks/04_mathematical_details.ipynb)** : Détails mathématiques
-5. **[Full Pipeline](examples/notebooks/05_full_pipeline.ipynb)** : Pipeline ML complet
-
-## 🏗️ Architecture
+### Benchmarks (Iris Dataset)
 
 ```
-decision_stumps_c50_project/
-├── src/
-│   ├── decision_stump/    # Module Decision Stump
-│   │   ├── stump.py       # Classe principale
-│   │   ├── criteria.py    # Gini, Entropie, Erreur
-│   │   └── utils.py       # Utilitaires
-│   ├── c50/               # Module C5.0
-│   │   ├── tree.py        # Classe C50Tree
-│   │   ├── node.py        # Structure de nœud
-│   │   ├── splitter.py    # Gain Ratio
-│   │   ├── pruning.py     # Élagage
-│   │   ├── missing_values.py
-│   │   └── boosting.py
-│   ├── ensemble/          # Méthodes d'ensemble
-│   ├── visualization/     # Visualisation
-│   └── utils/             # Utilitaires généraux
-├── tests/                 # Tests unitaires
-├── examples/              # Exemples d'utilisation
-├── benchmarks/            # Comparaisons de performance
-└── deployment/            # API, Streamlit, Docker
+Dataset: 150 exemples, 4 features, 3 classes
+
+Decision Stump (Gini):     66.7% accuracy  |  0.5ms entraînement
+Decision Stump (Entropy):  66.7% accuracy  |  0.5ms entraînement
+C5.0 Stump (basic):        66.7% accuracy  |  0.8ms entraînement
+C5.0 Stump (full):         66.7% accuracy  |  1.2ms entraînement
 ```
 
-## 📊 Exemples
-
-Le dossier `examples/` contient 5 scripts progressifs :
-
-```bash
-# 1. Exemple basique Decision Stump
-python examples/01_basic_decision_stump.py
-
-# 2. Classification avec C5.0
-python examples/02_c50_classification.py
-
-# 3. Ensemble AdaBoost
-python examples/03_adaboost_ensemble.py
-
-# 4. Comparaison DS vs C5.0 vs sklearn
-python examples/04_comparison.py
-
-# 5. Application sur données réelles
-python examples/05_real_world_dataset.py
-```
+---
 
 ## 🧪 Tests
 
-Le projet inclut une suite de tests complète avec coverage > 90%.
+Le projet inclut **58 tests unitaires** avec 100% de réussite.
 
 ```bash
-# Lancer tous les tests
+# Tous les tests
 pytest tests/ -v
 
 # Avec coverage
 pytest tests/ --cov=src --cov-report=html
 
 # Tests spécifiques
-pytest tests/test_decision_stump.py -v
-pytest tests/test_c50.py -v
+pytest tests/test_decision_stump.py -v  # 32 tests
+pytest tests/test_c50_stump.py -v       # 26 tests
 ```
 
-### Tests Disponibles
+### Couverture des Tests
 
-- ✅ `test_decision_stump.py` : Tests unitaires DS
-- ✅ `test_c50.py` : Tests unitaires C5.0
-- ✅ `test_criteria.py` : Tests critères d'impureté
-- ✅ `test_pruning.py` : Tests élagage
-- ✅ `test_boosting.py` : Tests boosting
-- ✅ `test_integration.py` : Tests d'intégration
+- ✅ Critères d'impureté (Gini, Entropie, Erreur)
+- ✅ Entraînement et prédiction
+- ✅ Gestion des valeurs manquantes
+- ✅ Élagage pessimiste
+- ✅ Matrice de coûts
+- ✅ Cas limites (données vides, une seule classe, etc.)
+- ✅ Compatibilité sklearn
+- ✅ Poids des échantillons
 
-## ⚡ Benchmarks
+---
 
-Comparaisons de performance sur plusieurs datasets :
+## 📝 Exemples
 
+### Exemple 1 : Utilisation Basique
 ```bash
-# Benchmark vitesse
-python benchmarks/speed_comparison.py
-
-# Benchmark précision
-python benchmarks/accuracy_comparison.py
+python examples/01_basic_decision_stump.py
 ```
 
-### Résultats Typiques (Iris Dataset)
+Démontre :
+- Entraînement sur données simples
+- Comparaison des 3 critères (Gini, Entropie, Erreur)
+- Échantillons pondérés
+- Visualisations
 
-| Algorithme | Accuracy | Temps Entraînement | Temps Prédiction |
-|------------|----------|-------------------|------------------|
-| Decision Stump | 66.7% | 0.001s | 0.0001s |
-| C5.0 | 95.6% | 0.015s | 0.001s |
-| C5.0 + Boosting | 97.8% | 0.12s | 0.005s |
-| sklearn DecisionTree | 95.6% | 0.002s | 0.0001s |
-
-## 🚀 Déploiement
-
-### API REST
-
+### Exemple 2 : Comparaison Decision Stump vs C5.0 Stump
 ```bash
-cd deployment/api
-pip install -r requirements_api.txt
-python app.py
+python examples/02_c50_stump_comparison.py
 ```
 
-Accès : `http://localhost:5000`
+Démontre :
+1. **Gain Ratio** corrige le biais du Gain d'Information
+2. **Gestion des valeurs manquantes** (NaN)
+3. **Élagage pessimiste**
+4. **Matrice de coûts** asymétriques
+5. **Benchmark complet** sur dataset réel
 
-Endpoints :
-- `POST /predict` : Prédire classes
-- `POST /train` : Entraîner modèle
-- `GET /model/info` : Informations sur le modèle
+---
 
-### Application Streamlit
+## 📚 Documentation
 
-```bash
-cd deployment/streamlit
-streamlit run app.py
+### Structure du Projet
+
+```
+decision_stumps_c50_project/
+├── src/
+│   ├── decision_stump/         # Module Decision Stump
+│   │   ├── stump.py           # Classe principale
+│   │   └── criteria.py        # Critères d'impureté
+│   └── c50/                   # Module C5.0 Stump
+│       ├── stump.py           # Classe principale
+│       └── README_C50_STUMP.md # Doc détaillée
+│
+├── tests/                      # Tests unitaires (58 tests)
+│   ├── test_decision_stump.py
+│   └── test_c50_stump.py
+│
+├── examples/                   # Exemples d'utilisation
+│   ├── 01_basic_decision_stump.py
+│   └── 02_c50_stump_comparison.py
+│
+└── docs/
+    └── rapport/
+        └── main.tex           # Rapport LaTeX complet
 ```
 
-Interface interactive pour :
-- Entraîner des modèles
-- Visualiser les arbres
-- Tester sur données personnalisées
-- Comparer algorithmes
+### Documentation Détaillée
 
-### Docker
+- 📄 **[README_C50_STUMP.md](src/c50/README_C50_STUMP.md)** : Guide complet C5.0 Stump
+- 📄 **[Rapport LaTeX](docs/rapport/main.tex)** : 40+ pages de fondements mathématiques
+- 📄 **Docstrings** : Toutes les fonctions documentées (format Google)
 
-```bash
-cd deployment/docker
-docker-compose up
+---
+
+## 🔬 Fondements Mathématiques
+
+### Gain Ratio (C5.0)
+
 ```
+Gain Ratio = Information Gain / Split Info
+
+où:
+  Information Gain = H(S) - Σ (|Sᵢ|/|S|) × H(Sᵢ)
+  Split Info = -Σ (|Sᵢ|/|S|) × log₂(|Sᵢ|/|S|)
+```
+
+### Élagage Pessimiste
+
+```
+error_rate = (E + 0.5) / (N + 1)  [Laplace smoothing]
+
+pessimistic_error = error_rate + z × √(error_rate × (1-error_rate) / N)
+
+Si error(feuille) ≤ error(stump) → élaguer
+```
+
+### Valeurs Manquantes
+
+```
+Pour attribut A avec seuil θ:
+1. Calculer division sur valeurs valides
+2. p_left = |S_left| / |S_valid|
+   p_right = |S_right| / |S_valid|
+3. Pour x avec A=NaN:
+   Assigner à gauche avec probabilité p_left
+```
+
+---
 
 ## 👥 Contributeurs
 
-Ce projet a été réalisé dans le cadre d'un projet académique à l'ENSAM Meknès :
+**Équipe ENSAM Meknès 2024-2025**
 
 - **Nankouli Marc Thierry**
 - **El Khatar Saad**
 - **El Filali**
 
-**Encadrant :** Mr. Idriss Barbara
-
-## 📜 Licence
-
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
-
-## 📚 Références
-
-- Quinlan, J.R. (1993). *C4.5: Programs for Machine Learning*. Morgan Kaufmann.
-- Quinlan, J.R. (1996). *Improved Use of Continuous Attributes in C4.5*. JAIR, 4:77-90.
-- Freund, Y., Schapire, R.E. (1997). *A Decision-Theoretic Generalization of On-Line Learning*. JCSS, 55(1):119-139.
-- Hastie, T., Tibshirani, R., Friedman, J. (2009). *The Elements of Statistical Learning*. Springer.
-
-## 🤝 Contributions
-
-Les contributions sont les bienvenues ! N'hésitez pas à :
-
-1. Fork le projet
-2. Créer une branche (`git checkout -b feature/AmazingFeature`)
-3. Commit vos changements (`git commit -m 'Add AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
-
-## 📧 Contact
-
-<!-- Pour toute question ou suggestion : [votre.email@example.com](mailto:votre.email@example.com) -->
+**Encadrant :** Pr Hosni
 
 ---
 
-⭐ Si ce projet vous a été utile, n'oubliez pas de mettre une étoile !
+## 📜 Licence
+
+Ce projet est sous licence MIT. Voir [LICENSE](LICENSE) pour plus de détails.
+
+---
+
+## 🙏 Remerciements
+
+- **Ross Quinlan** pour les algorithmes C4.5 et C5.0
+- **Yoav Freund & Robert Schapire** pour AdaBoost
+- **ENSAM Meknès** pour le cadre du projet
+
+---
+
+## 📚 Références
+
+1. Quinlan, J.R. (1993). *C4.5: Programs for Machine Learning*. Morgan Kaufmann.
+2. Quinlan, J.R. (1996). *Improved Use of Continuous Attributes in C4.5*. JAIR, 4:77-90.
+3. Breiman, L. et al. (1984). *Classification and Regression Trees*. Wadsworth.
+4. Hastie, T., Tibshirani, R., Friedman, J. (2009). *The Elements of Statistical Learning*. Springer.
+
+---
+<!-- 
+## 📞 Contact
+
+Pour toute question ou suggestion : [GitHub Issues](https://github.com/votre-repo/issues) -->
+
+---
+
+⭐ **Si ce projet vous a été utile, n'hésitez pas à lui donner une étoile !**

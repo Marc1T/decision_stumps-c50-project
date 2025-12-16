@@ -9,7 +9,7 @@ Utilisé principalement comme classifieur faible dans les méthodes d'ensemble
 (AdaBoost, Gradient Boosting).
 
 Auteur: Équipe ENSAM Meknès
-Date: 2025-2026
+Date: 2024-2025
 """
 
 import numpy as np
@@ -248,7 +248,7 @@ class DecisionStump:
             raise RuntimeError("Le modèle doit être entraîné avant de prédire.")
         
         predictions = self.predict(X)
-        classes = np.unique([self.left_class_, self.right_class_])
+        classes = np.unique([self.left_class_, self.right_class_]) # type: ignore
         n_classes = len(classes)
         n_samples = len(predictions)
         
@@ -322,8 +322,11 @@ class DecisionStump:
             weights: Poids des exemples
             
         Returns:
-            Classe majoritaire
+            Classe majoritaire (ou 0 si y est vide)
         """
+        if len(y) == 0:
+            return 0  # Valeur par défaut pour array vide
+        
         classes = np.unique(y)
         weighted_counts = np.array([
             np.sum(weights[y == c]) for c in classes

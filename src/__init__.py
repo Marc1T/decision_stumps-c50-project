@@ -25,7 +25,10 @@ from .decision_stump.criteria import (
     information_gain
 )
 
-# TODO: Importer C50Tree quand implémenté
+# C5.0 Stump
+from .c50.stump import C50Stump
+
+# TODO: Importer C50Tree quand implémenté (Phase 3)
 # from .c50.tree import C50Tree
 
 # TODO: Importer AdaBoost quand implémenté  
@@ -34,6 +37,7 @@ from .decision_stump.criteria import (
 __all__ = [
     # Classes principales
     'DecisionStump',
+    'C50Stump',
     # 'C50Tree',  # À décommenter quand implémenté
     # 'AdaBoostStump',  # À décommenter quand implémenté
     

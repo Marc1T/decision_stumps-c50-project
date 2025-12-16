@@ -9,7 +9,7 @@ Ce module teste toutes les fonctionnalités du Decision Stump:
 - Compatibilité sklearn
 
 Auteur: Équipe ENSAM Meknès
-Date: 2025-2026
+Date: 2024-2025
 """
 
 import pytest
@@ -18,8 +18,8 @@ from numpy.testing import assert_array_equal, assert_almost_equal
 import sys
 sys.path.insert(0, 'src')
 
-from decision_stump.stump import DecisionStump
-from decision_stump.criteria import gini_impurity, entropy, classification_error
+from decision_stump.stump import DecisionStump # type: ignore
+from decision_stump.criteria import gini_impurity, entropy, classification_error # type: ignore
 
 
 class TestCriteria:
@@ -40,7 +40,8 @@ class TestCriteria:
         y = np.array([0, 0, 1])
         weights = np.array([1, 1, 2])  # Plus de poids sur classe 1
         gini = gini_impurity(y, weights)
-        assert 0 < gini < 0.5
+        # Avec ces poids: p0=2/4=0.5, p1=2/4=0.5 → Gini = 1 - (0.5² + 0.5²) = 0.5
+        assert 0 < gini <= 0.5
     
     def test_entropy_pure(self):
         """Test entropie sur ensemble pur."""

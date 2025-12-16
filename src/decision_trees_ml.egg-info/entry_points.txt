@@ -1,4 +1,0 @@
-[console_scripts]
-dt-evaluate = scripts.evaluate_model:main
-dt-export = scripts.export_model:main
-dt-train = scripts.train_model:main

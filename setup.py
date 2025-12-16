@@ -11,9 +11,13 @@ def read_long_description():
     here = os.path.abspath(os.path.dirname(__file__))
     readme_path = os.path.join(here, 'README.md')
     
-    if os.path.exists(readme_path):
-        with open(readme_path, 'r', encoding='utf-8') as f:
-            return f.read()
+    try:
+        if os.path.exists(readme_path):
+            with open(readme_path, 'r', encoding='utf-8') as f:
+                return f.read()
+    except UnicodeDecodeError:
+        # Fallback si problème d'encodage
+        return "Decision Trees ML - Decision Stumps and C5.0 implementation"
     return ''
 
 # Lire les dépendances depuis requirements.txt
@@ -22,17 +26,20 @@ def read_requirements():
     req_path = os.path.join(here, 'requirements.txt')
     
     requirements = []
-    if os.path.exists(req_path):
-        with open(req_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                line = line.strip()
-                # Ignorer commentaires et lignes vides
-                if line and not line.startswith('#'):
-                    # Extraire seulement les dépendances core (pas dev tools)
-                    if not any(pkg in line.lower() for pkg in ['pytest', 'sphinx', 'black', 'flake8', 'mypy', 'isort']):
-                        requirements.append(line)
+    try:
+        if os.path.exists(req_path):
+            with open(req_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    # Ignorer commentaires et lignes vides
+                    if line and not line.startswith('#'):
+                        # Extraire seulement les dépendances core (pas dev tools)
+                        if not any(pkg in line.lower() for pkg in ['pytest', 'sphinx', 'black', 'flake8', 'mypy', 'isort']):
+                            requirements.append(line)
+    except UnicodeDecodeError:
+        pass  # Utiliser les dépendances par défaut
     
-    # Dépendances minimales si requirements.txt n'existe pas
+    # Dépendances minimales si requirements.txt n'existe pas ou erreur
     if not requirements:
         requirements = [
             'numpy>=1.21.0',
@@ -157,15 +164,16 @@ setup(
 )
 
 # Instructions post-installation
-print("""
+if __name__ == "__main__":
+    print("""
 ╔══════════════════════════════════════════════════════════════════╗
 ║                                                                  ║
-║  ✅ Package decision-trees-ml installé avec succès!             ║
+║  ✅ Package decision-trees-ml installe avec succes!             ║
 ║                                                                  ║
-║  📚 Prochaines étapes:                                          ║
+║  📚 Prochaines etapes:                                          ║
 ║                                                                  ║
 ║  1. Importer le package:                                        ║
-║     >>> from decision_trees_ml import DecisionStump, C50Tree    ║
+║     >>> from src.decision_stump import DecisionStump            ║
 ║                                                                  ║
 ║  2. Consulter les exemples:                                     ║
 ║     $ python examples/01_basic_decision_stump.py                ║
@@ -176,7 +184,7 @@ print("""
 ║  4. Voir la documentation:                                      ║
 ║     $ cd docs && open api/index.html                            ║
 ║                                                                  ║
-║  📖 Documentation complète: README.md                           ║
+║  📖 Documentation complete: README.md                           ║
 ║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 """)
