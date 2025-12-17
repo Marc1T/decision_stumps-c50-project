@@ -149,57 +149,6 @@ print(stump.stats_)
 #  'error_rate': 0.0, 'is_pruned': False}
 ```
 
-### Comparaison sur Dataset Réel
-
-```python
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-from decision_stump import DecisionStump
-from c50 import C50Stump
-
-# Charger Iris
-X, y = load_iris(return_X_y=True)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
-
-# Decision Stump classique
-ds = DecisionStump(criterion='entropy')
-ds.fit(X_train, y_train)
-print(f"Decision Stump: {ds.score(X_test, y_test):.2%}")
-
-# C5.0 Stump
-c50 = C50Stump(handle_missing=True, use_pruning=True)
-c50.fit(X_train, y_train)
-print(f"C5.0 Stump: {c50.score(X_test, y_test):.2%}")
-print(f"Gain Ratio: {c50.gain_ratio_:.4f}")
-```
-
----
-
-## 📊 Comparaison des Algorithmes
-
-| Caractéristique | Decision Stump | C5.0 Stump |
-|-----------------|----------------|------------|
-| **Critère** | Gini/Entropie | Gain Ratio |
-| **Valeurs manquantes** | ❌ | ✅ Probabiliste |
-| **Élagage** | ❌ | ✅ Pessimiste |
-| **Coûts asymétriques** | ❌ | ✅ Matrice |
-| **Vitesse** | 🟢 Ultra-rapide | 🟡 Rapide |
-| **Accuracy** | 🟡 Bonne | 🟢 Meilleure |
-| **Généralisation** | 🟡 Acceptable | 🟢 Excellente |
-
-### Benchmarks (Iris Dataset)
-
-```
-Dataset: 150 exemples, 4 features, 3 classes
-
-Decision Stump (Gini):     66.7% accuracy  |  0.5ms entraînement
-Decision Stump (Entropy):  66.7% accuracy  |  0.5ms entraînement
-C5.0 Stump (basic):        66.7% accuracy  |  0.8ms entraînement
-C5.0 Stump (full):         66.7% accuracy  |  1.2ms entraînement
-```
-
----
-
 ## 🧪 Tests
 
 Le projet inclut **58 tests unitaires** avec 100% de réussite.
@@ -328,7 +277,7 @@ Pour attribut A avec seuil θ:
 
 ## 👥 Contributeurs
 
-**Équipe ENSAM Meknès 2024-2025**
+**Équipe ENSAM Meknès 2025-2026**
 
 - **Nankouli Marc Thierry**
 - **El Khatar Saad**

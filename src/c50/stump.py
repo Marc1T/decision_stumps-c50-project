@@ -10,7 +10,7 @@ Améliorations par rapport au Decision Stump classique :
 6. Statistiques détaillées pour analyse
 
 Auteur: Équipe ENSAM Meknès
-Date: 2024-2025
+Date: 2025-2026
 """
 
 import numpy as np
@@ -283,7 +283,7 @@ class C50Stump:
             self.split_info_ = best_split['split_info']
             self.missing_strategy_ = best_split['missing_strategy']
         
-        
+
         self.is_fitted_ = True
         # Calculer erreur d'entraînement
         y_pred = self.predict(X)
@@ -310,19 +310,13 @@ class C50Stump:
         
         self.is_fitted_ = True
         return self
-    
+
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
-        Prédit les classes avec gestion des valeurs manquantes.
-        
-        Args:
-            X: Matrice des caractéristiques
-            
-        Returns:
-            y_pred: Prédictions
+        Prédictions avec gestion correcte NaN (approche C5.0 authentique).
         """
         if not self.is_fitted_:
-            raise RuntimeError("Modèle non entraîné. Appelez fit() d'abord.")
+            raise RuntimeError("Modèle non entraîné.")
         
         X = np.asarray(X, dtype=np.float64)
         if X.ndim == 1:
@@ -331,31 +325,76 @@ class C50Stump:
         n_samples = X.shape[0]
         predictions = np.empty(n_samples, dtype=type(self.left_class_))
         
-        # Extraire feature de décision
         feature_values = X[:, self.feature_index_]
-        
-        # Gérer valeurs valides
         valid_mask = ~np.isnan(feature_values)
         left_mask = feature_values <= self.threshold_
         
-        # Prédictions pour valeurs valides
+        # Valeurs valides
         predictions[valid_mask & left_mask] = self.left_class_
         predictions[valid_mask & ~left_mask] = self.right_class_
         
-        # Gérer valeurs manquantes
+        # 🔧 FIX : Valeurs manquantes
         missing_mask = ~valid_mask
         if np.any(missing_mask):
             if self.missing_strategy_ is not None:
-                # Distribution probabiliste (choisir côté avec plus grande proba)
-                if self.missing_strategy_['proba_left'] >= 0.5:
-                    predictions[missing_mask] = self.left_class_
+                # Choisir côté avec plus grande probabilité
+                if self.left_class_ != self.right_class_:
+                    if self.missing_strategy_['proba_left'] > self.missing_strategy_['proba_right']:
+                        predictions[missing_mask] = self.left_class_
+                    else:
+                        predictions[missing_mask] = self.right_class_
                 else:
-                    predictions[missing_mask] = self.right_class_
+                    predictions[missing_mask] = self.left_class_
             else:
-                # Fallback : classe majoritaire globale
                 predictions[missing_mask] = self.left_class_
         
         return predictions
+
+    # def predict(self, X: np.ndarray) -> np.ndarray:
+    #     """
+    #     Prédit les classes avec gestion des valeurs manquantes.
+        
+    #     Args:
+    #         X: Matrice des caractéristiques
+            
+    #     Returns:
+    #         y_pred: Prédictions
+    #     """
+    #     if not self.is_fitted_:
+    #         raise RuntimeError("Modèle non entraîné. Appelez fit() d'abord.")
+        
+    #     X = np.asarray(X, dtype=np.float64)
+    #     if X.ndim == 1:
+    #         X = X.reshape(-1, 1)
+        
+    #     n_samples = X.shape[0]
+    #     predictions = np.empty(n_samples, dtype=type(self.left_class_))
+        
+    #     # Extraire feature de décision
+    #     feature_values = X[:, self.feature_index_]
+        
+    #     # Gérer valeurs valides
+    #     valid_mask = ~np.isnan(feature_values)
+    #     left_mask = feature_values <= self.threshold_
+        
+    #     # Prédictions pour valeurs valides
+    #     predictions[valid_mask & left_mask] = self.left_class_
+    #     predictions[valid_mask & ~left_mask] = self.right_class_
+        
+    #     # Gérer valeurs manquantes
+    #     missing_mask = ~valid_mask
+    #     if np.any(missing_mask):
+    #         if self.missing_strategy_ is not None:
+    #             # Distribution probabiliste (choisir côté avec plus grande proba)
+    #             if self.missing_strategy_['proba_left'] >= 0.5:
+    #                 predictions[missing_mask] = self.left_class_
+    #             else:
+    #                 predictions[missing_mask] = self.right_class_
+    #         else:
+    #             # Fallback : classe majoritaire globale
+    #             predictions[missing_mask] = self.left_class_
+        
+    #     return predictions
     
     def predict_proba(self, X: np.ndarray) -> np.ndarray:
         """

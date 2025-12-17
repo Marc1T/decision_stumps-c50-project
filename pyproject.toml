@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-    {name = "Equipe ENSAM Meknes", email = "votre.email@example.com"}
+    {name = "Equipe ENSAM Meknes", email = "m.nankouli@edu.umi.ac.ma"}
 ]
 keywords = [
     "machine-learning",
@@ -62,17 +62,17 @@ viz = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/votre-repo/decision_stumps_c50"
+Homepage = "https://github.com/Marc1T/decision_stumps_c50"
 Documentation = "https://decision-trees-ml.readthedocs.io"
-Repository = "https://github.com/votre-repo/decision_stumps_c50"
-Issues = "https://github.com/votre-repo/decision_stumps_c50/issues"
+Repository = "https://github.com/Marc1T/decision_stumps_c50"
+Issues = "https://github.com/Marc1T/decision_stumps_c50/issues"
 
 [project.scripts]
 dt-train = "scripts.train_model:main"
 dt-evaluate = "scripts.evaluate_model:main"
 
 [tool.setuptools]
-packages = ["decision_stump", "c50", "ensemble", "visualization", "utils"]
+packages = ["decision_stump", "c50"]
 package-dir = {"" = "src"}
 
 [tool.setuptools.package-data]
